@@ -23,11 +23,15 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server && \
 #Utilities
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y vim less ntp net-tools inetutils-ping curl git telnet
 
-#Redis
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y redis-server
-
 #Build tools
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y automake libtool make
+
+#Redis
+RUN wget http://download.redis.io/releases/redis-2.6.16.tar.gz && \
+    tar xzf redis-2.6.16.tar.gz && \
+    rm redis-2.6.16.tar.gz && \
+    cd redis-2.6.16 && \
+    make
 
 #twemproxy
 RUN git clone https://github.com/twitter/twemproxy.git && \
@@ -38,9 +42,12 @@ RUN git clone https://github.com/twitter/twemproxy.git && \
     make
 
 #Configuration
-ADD ./supervisord-redis.conf /etc/supervisor/conf.d/supervisord-redis.conf
-ADD ./nutcracker.yml /nutcracker.yml
+ADD . /docker-redis
+RUN cd /docker-redis && chmod +x *sh && \
+    cp /docker-redis/supervisord-redis.conf /etc/supervisor/conf.d/supervisord-redis.conf && \
+    find /redis-2.6.16/src -perm /a+x -type f -exec mv {} /usr/bin \; && \
+    find /twemproxy/src -perm /a+x -type f -exec mv {} /usr/bin \;
 
-EXPOSE 22 6379 63790
+EXPOSE 22 22222 63790
 
 
