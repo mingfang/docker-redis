@@ -41,6 +41,10 @@ RUN git clone https://github.com/twitter/twemproxy.git && \
     ./configure --enable-debug=log && \
     make
 
+#redis-stat
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential ruby1.9.1 ruby1.9.1-dev
+RUN gem install redis-stat
+
 #Configuration
 ADD . /docker-redis
 RUN cd /docker-redis && chmod +x *sh && \
@@ -48,6 +52,6 @@ RUN cd /docker-redis && chmod +x *sh && \
     find /redis-2.6.16/src -perm /a+x -type f -exec mv {} /usr/bin \; && \
     find /twemproxy/src -perm /a+x -type f -exec mv {} /usr/bin \;
 
-EXPOSE 22 22222 63790
+EXPOSE 22 22222 63790 8888
 
 
