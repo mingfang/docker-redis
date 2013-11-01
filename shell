@@ -1,1 +1,1 @@
-docker run -p 49888:8888 -i -t redis /bin/bash
+docker run -p 49888:8888 -p 49379:63790 -i -t redis /bin/bash
