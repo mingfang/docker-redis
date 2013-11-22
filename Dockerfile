@@ -26,10 +26,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y vim less ntp net-tools ine
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y automake libtool make
 
 #Redis
-RUN wget http://download.redis.io/releases/redis-2.6.16.tar.gz && \
-    tar xzf redis-2.6.16.tar.gz && \
-    rm redis-2.6.16.tar.gz && \
-    cd redis-2.6.16 && \
+RUN wget http://download.redis.io/releases/redis-2.8.0.tar.gz && \
+    tar xzf redis-2.8.0.tar.gz && \
+    rm redis-2.8.0.tar.gz && \
+    cd redis-2.8.0 && \
     make
 
 #twemproxy
@@ -48,7 +48,7 @@ RUN gem install redis-stat
 ADD . /docker-redis
 RUN cd /docker-redis && chmod +x *sh && \
     cp /docker-redis/supervisord-redis.conf /etc/supervisor/conf.d/supervisord-redis.conf && \
-    find /redis-2.6.16/src -perm /a+x -type f -exec mv {} /usr/bin \; && \
+    find /redis-2.8.0/src -perm /a+x -type f -exec mv {} /usr/bin \; && \
     find /twemproxy/src -perm /a+x -type f -exec mv {} /usr/bin \;
 
 EXPOSE 22 22222 63790 8888
