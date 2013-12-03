@@ -1,26 +1,22 @@
-#Redis
-
 FROM ubuntu
- 
+
 RUN echo 'deb http://archive.ubuntu.com/ubuntu precise main universe' > /etc/apt/sources.list && \
+    echo 'deb http://archive.ubuntu.com/ubuntu precise-updates universe' >> /etc/apt/sources.list && \
     apt-get update
 
 #Prevent daemon start during install
-RUN	echo '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d && \
-    chmod +x /usr/sbin/policy-rc.d
+RUN dpkg-divert --local --rename --add /sbin/initctl && ln -s /bin/true /sbin/initctl
 
 #Supervisord
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor && \
-	mkdir -p /var/log/supervisor
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor && mkdir -p /var/log/supervisor
 CMD ["/usr/bin/supervisord", "-n"]
 
 #SSHD
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server && \
-	mkdir /var/run/sshd && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server &&	mkdir /var/run/sshd && \
 	echo 'root:root' |chpasswd
 
 #Utilities
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y vim less ntp net-tools inetutils-ping curl git telnet
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y vim less net-tools inetutils-ping curl git telnet nmap socat dnsutils netcat
 
 #Build tools
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y automake libtool make
