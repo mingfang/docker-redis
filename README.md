@@ -1,4 +1,4 @@
 docker-redis
 ============
 
-Run Redis with Twemproxy inside Docker
+Run Redis Inside Docker
