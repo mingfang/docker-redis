@@ -1,3 +1,4 @@
 #!/bin/bash
+source helper
 
-docker run -v `pwd`:/docker -w /docker --rm -it redis /bin/bash
+docker run --rm -v `pwd`:/docker -it ${IMAGE} bash
