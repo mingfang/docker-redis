@@ -5,5 +5,7 @@
 source /etc/envvars
 env
 
+mkdir -p /data
+
 exec 2>&1
 exec redis-server /etc/redis.conf
